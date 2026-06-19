@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage
+    x:Class="Przypominajka.Views.KategoriePage"
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:vm="clr-namespace:Przypominajka.ViewModels"
+    xmlns:m="clr-namespace:Przypominajka.Models"
+    x:DataType="vm:KategorieViewModel"
+    Title="Kategorie">
+
+    <ContentPage.ToolbarItems>
+        <ToolbarItem Text="+ Dodaj" Command="{Binding DodajCommand}" />
+    </ContentPage.ToolbarItems>
+
+    <Grid RowDefinitions="Auto,*">
+        <ActivityIndicator Grid.Row="0" IsRunning="{Binding IsLoading}" IsVisible="{Binding IsLoading}"
+                           HorizontalOptions="Center" Margin="8" />
+
+        <CollectionView Grid.Row="1" ItemsSource="{Binding Kategorie}"
+                        EmptyView="Brak kategorii. Kliknij + Dodaj.">
+            <CollectionView.ItemTemplate>
+                <DataTemplate x:DataType="m:Kategoria">
+                    <Border Margin="8,4" Padding="12" StrokeShape="RoundRectangle 8"
+                            Stroke="#E0E0E0" BackgroundColor="White">
+                        <Grid ColumnDefinitions="48,*,Auto" ColumnSpacing="12">
+                            <!-- Kolor etykiety -->
+                            <Border Grid.Column="0" WidthRequest="40" HeightRequest="40"
+                                    StrokeShape="RoundRectangle 20"
+                                    BackgroundColor="{Binding KolorEtykiety}" />
+
+                            <!-- Nazwa + kolor hex -->
+                            <VerticalStackLayout Grid.Column="1" VerticalOptions="Center">
+                                <Label Text="{Binding NazwaKategorii}" FontAttributes="Bold" FontSize="15" />
+                                <Label Text="{Binding KolorEtykiety}" FontSize="11" TextColor="#888" />
+                            </VerticalStackLayout>
+
+                            <!-- Akcje -->
+                            <HorizontalStackLayout Grid.Column="2" Spacing="4">
+                                <Button Text="✏️" BackgroundColor="#F39C12" TextColor="White"
+                                        WidthRequest="36" HeightRequest="36" CornerRadius="18" Padding="0"
+                                        CommandParameter="{Binding .}"
+                                        Command="{Binding Source={RelativeSource AncestorType={x:Type vm:KategorieViewModel}}, Path=EdytujCommand}" />
+                                <Button Text="🗑" BackgroundColor="#E74C3C" TextColor="White"
+                                        WidthRequest="36" HeightRequest="36" CornerRadius="18" Padding="0"
+                                        CommandParameter="{Binding .}"
+                                        Command="{Binding Source={RelativeSource AncestorType={x:Type vm:KategorieViewModel}}, Path=UsunCommand}" />
+                            </HorizontalStackLayout>
+                        </Grid>
+                    </Border>
+                </DataTemplate>
+            </CollectionView.ItemTemplate>
+        </CollectionView>
+    </Grid>
+</ContentPage>

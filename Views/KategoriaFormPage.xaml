@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage
+    x:Class="Przypominajka.Views.KategoriaFormPage"
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:vm="clr-namespace:Przypominajka.ViewModels"
+    x:DataType="vm:KategoriaFormViewModel"
+    Title="{Binding Tytul}">
+
+    <VerticalStackLayout Padding="16" Spacing="14">
+        <Label Text="Nazwa kategorii *" FontAttributes="Bold" />
+        <Entry Text="{Binding NazwaKategorii}" Placeholder="np. Praca, Dom, Zdrowie" />
+
+        <Label Text="Kolor etykiety (hex) *" FontAttributes="Bold" />
+        <Entry Text="{Binding KolorEtykiety}" Placeholder="#3498DB" />
+
+        <!-- Podgląd koloru -->
+        <Border WidthRequest="60" HeightRequest="60" StrokeShape="RoundRectangle 30"
+                BackgroundColor="{Binding KolorEtykiety}" HorizontalOptions="Start" />
+        <Label Text="Podgląd koloru" FontSize="11" TextColor="#888" />
+
+        <Grid ColumnDefinitions="*,*" ColumnSpacing="12" Margin="0,8,0,0">
+            <Button Grid.Column="0" Text="💾 Zapisz" Command="{Binding ZapiszCommand}"
+                    BackgroundColor="#27AE60" TextColor="White" CornerRadius="8" />
+            <Button Grid.Column="1" Text="✖ Anuluj" Command="{Binding AnulujCommand}"
+                    BackgroundColor="#95A5A6" TextColor="White" CornerRadius="8" />
+        </Grid>
+    </VerticalStackLayout>
+</ContentPage>

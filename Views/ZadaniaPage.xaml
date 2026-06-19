@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage
+    x:Class="Przypominajka.Views.ZadaniaPage"
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:vm="clr-namespace:Przypominajka.ViewModels"
+    xmlns:m="clr-namespace:Przypominajka.Models"
+    x:DataType="vm:ZadaniaViewModel"
+    Title="Zadania">
+
+    <ContentPage.ToolbarItems>
+        <ToolbarItem Text="+ Dodaj" Command="{Binding DodajCommand}" />
+    </ContentPage.ToolbarItems>
+
+    <Grid RowDefinitions="Auto,Auto,*">
+
+        <!-- Filtry -->
+        <VerticalStackLayout Grid.Row="0" Padding="12,8" Spacing="8" BackgroundColor="#F5F5F5">
+            <SearchBar Placeholder="Szukaj zadania..." Text="{Binding Szukaj}"
+                       SearchCommand="{Binding ZastosujFiltryCommand}" />
+            <HorizontalStackLayout Spacing="8">
+                <Picker Title="Kategoria" ItemsSource="{Binding Kategorie}"
+                        ItemDisplayBinding="{Binding NazwaKategorii}"
+                        SelectedItem="{Binding WybranaKategoria}"
+                        HorizontalOptions="FillAndExpand" WidthRequest="200" />
+                <Picker Title="Status" ItemsSource="{Binding StatusyFiltra}"
+                        SelectedItem="{Binding FiltrStatusu}"
+                        WidthRequest="160" />
+                <Button Text="Szukaj" Command="{Binding ZastosujFiltryCommand}"
+                        BackgroundColor="#3498DB" TextColor="White" CornerRadius="6" />
+                <Button Text="Wyczyść" Command="{Binding WyczyscFiltryCommand}"
+                        BackgroundColor="#95A5A6" TextColor="White" CornerRadius="6" />
+            </HorizontalStackLayout>
+        </VerticalStackLayout>
+
+        <!-- Loader -->
+        <ActivityIndicator Grid.Row="1" IsRunning="{Binding IsLoading}"
+                           IsVisible="{Binding IsLoading}" HorizontalOptions="Center" />
+
+        <!-- Lista zadań -->
+        <CollectionView Grid.Row="2" ItemsSource="{Binding Zadania}"
+                        EmptyView="Brak zadan - kliknij + Dodaj, by utworzyc pierwsze."
+                        SelectionMode="None">
+            <CollectionView.ItemTemplate>
+                <DataTemplate x:DataType="m:Zadanie">
+                    <Border Margin="8,4" Padding="12" StrokeShape="RoundRectangle 8" StrokeThickness="1"
+                            Stroke="#E0E0E0" BackgroundColor="White">
+                        <Grid ColumnDefinitions="8,*,Auto" ColumnSpacing="10">
+
+                            <!-- Pasek koloru kategorii -->
+                            <BoxView Grid.Column="0"
+                                     Color="{Binding Kategoria.KolorEtykiety, FallbackValue='#CCCCCC'}"
+                                     CornerRadius="4" WidthRequest="6" />
+
+                            <!-- Treść -->
+                            <VerticalStackLayout Grid.Column="1" Spacing="3">
+                                <Label Text="{Binding NazwaZadania}" FontAttributes="Bold" FontSize="15" />
+                                <Label Text="{Binding OpisZadania}" FontSize="12" TextColor="#666"
+                                       MaxLines="2" LineBreakMode="TailTruncation"
+                                       IsVisible="{Binding OpisZadania, Converter={StaticResource NotNullConverter}}" />
+                                <HorizontalStackLayout Spacing="12">
+                                    <Label Text="{Binding TerminWykonania, StringFormat='📅 {0:dd.MM.yyyy HH:mm}'}"
+                                           FontSize="11" TextColor="#555" />
+                                    <Label FontSize="11" TextColor="#888"
+                                           Text="{Binding Kategoria.NazwaKategorii, FallbackValue='(bez kategorii)'}" />
+                                </HorizontalStackLayout>
+                            </VerticalStackLayout>
+
+                            <!-- Akcje -->
+                            <HorizontalStackLayout Grid.Column="2" Spacing="4" VerticalOptions="Center">
+                                <Button Text="✓"
+                                        BackgroundColor="{Binding StatusWykonania, Converter={StaticResource BoolToColorConverter}}"
+                                        TextColor="White" WidthRequest="36" HeightRequest="36"
+                                        CornerRadius="18" Padding="0"
+                                        CommandParameter="{Binding .}"
+                                        Command="{Binding Source={RelativeSource AncestorType={x:Type vm:ZadaniaViewModel}}, Path=PrzepnijStatusCommand}" />
+                                <Button Text="✏️" BackgroundColor="#F39C12" TextColor="White"
+                                        WidthRequest="36" HeightRequest="36" CornerRadius="18" Padding="0"
+                                        CommandParameter="{Binding .}"
+                                        Command="{Binding Source={RelativeSource AncestorType={x:Type vm:ZadaniaViewModel}}, Path=EdytujCommand}" />
+                                <Button Text="🗑" BackgroundColor="#E74C3C" TextColor="White"
+                                        WidthRequest="36" HeightRequest="36" CornerRadius="18" Padding="0"
+                                        CommandParameter="{Binding .}"
+                                        Command="{Binding Source={RelativeSource AncestorType={x:Type vm:ZadaniaViewModel}}, Path=UsunCommand}" />
+                            </HorizontalStackLayout>
+                        </Grid>
+                    </Border>
+                </DataTemplate>
+            </CollectionView.ItemTemplate>
+        </CollectionView>
+    </Grid>
+</ContentPage>

@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage
+    x:Class="Przypominajka.Views.SeriaFormPage"
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:vm="clr-namespace:Przypominajka.ViewModels"
+    x:DataType="vm:SeriaFormViewModel"
+    Title="{Binding Tytul}">
+
+    <VerticalStackLayout Padding="16" Spacing="14">
+        <Label Text="Interwał powtarzania *" FontAttributes="Bold" />
+        <Picker ItemsSource="{Binding DostepneInterwaly}"
+                SelectedItem="{Binding InterwalPowtarzania}" />
+
+        <Grid ColumnDefinitions="*,Auto" Padding="0,4">
+            <Label Grid.Column="0" Text="Aktywna" VerticalOptions="Center" />
+            <Switch Grid.Column="1" IsToggled="{Binding CzyAktywna}" />
+        </Grid>
+
+        <Grid ColumnDefinitions="*,*" ColumnSpacing="12" Margin="0,8,0,0">
+            <Button Grid.Column="0" Text="💾 Zapisz" Command="{Binding ZapiszCommand}"
+                    BackgroundColor="#27AE60" TextColor="White" CornerRadius="8" />
+            <Button Grid.Column="1" Text="✖ Anuluj" Command="{Binding AnulujCommand}"
+                    BackgroundColor="#95A5A6" TextColor="White" CornerRadius="8" />
+        </Grid>
+    </VerticalStackLayout>
+</ContentPage>

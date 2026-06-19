@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage
+    x:Class="Przypominajka.Views.SeriePage"
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:vm="clr-namespace:Przypominajka.ViewModels"
+    xmlns:m="clr-namespace:Przypominajka.Models"
+    x:DataType="vm:SerieViewModel"
+    Title="Serie">
+
+    <ContentPage.ToolbarItems>
+        <ToolbarItem Text="+ Dodaj" Command="{Binding DodajCommand}" />
+    </ContentPage.ToolbarItems>
+
+    <Grid RowDefinitions="Auto,*">
+        <ActivityIndicator Grid.Row="0" IsRunning="{Binding IsLoading}" IsVisible="{Binding IsLoading}"
+                           HorizontalOptions="Center" Margin="8" />
+
+        <CollectionView Grid.Row="1" ItemsSource="{Binding Serie}"
+                        EmptyView="Brak serii. Kliknij + Dodaj.">
+            <CollectionView.ItemTemplate>
+                <DataTemplate x:DataType="m:Seria">
+                    <Border Margin="8,4" Padding="12" StrokeShape="RoundRectangle 8"
+                            Stroke="#E0E0E0" BackgroundColor="White">
+                        <Grid ColumnDefinitions="*,Auto,Auto,Auto" ColumnSpacing="8">
+                            <VerticalStackLayout Grid.Column="0" VerticalOptions="Center">
+                                <Label Text="{Binding InterwalPowtarzania}" FontAttributes="Bold" FontSize="15" />
+                                <Label FontSize="11" TextColor="#888">
+                                    <Label.Text>
+                                        <MultiBinding StringFormat="{}{0}">
+                                            <Binding Path="CzyAktywna"
+                                                     Converter="{StaticResource BoolToStringConverter}"
+                                                     ConverterParameter="Aktywna|Nieaktywna" />
+                                        </MultiBinding>
+                                    </Label.Text>
+                                </Label>
+                            </VerticalStackLayout>
+
+                            <Switch Grid.Column="1" IsToggled="{Binding CzyAktywna}"
+                                    VerticalOptions="Center"
+                                    Toggled="Switch_Toggled" />
+
+                            <Button Grid.Column="2" Text="✏️" BackgroundColor="#F39C12" TextColor="White"
+                                    WidthRequest="36" HeightRequest="36" CornerRadius="18" Padding="0"
+                                    CommandParameter="{Binding .}"
+                                    Command="{Binding Source={RelativeSource AncestorType={x:Type vm:SerieViewModel}}, Path=EdytujCommand}" />
+
+                            <Button Grid.Column="3" Text="🗑" BackgroundColor="#E74C3C" TextColor="White"
+                                    WidthRequest="36" HeightRequest="36" CornerRadius="18" Padding="0"
+                                    CommandParameter="{Binding .}"
+                                    Command="{Binding Source={RelativeSource AncestorType={x:Type vm:SerieViewModel}}, Path=UsunCommand}" />
+                        </Grid>
+                    </Border>
+                </DataTemplate>
+            </CollectionView.ItemTemplate>
+        </CollectionView>
+    </Grid>
+</ContentPage>

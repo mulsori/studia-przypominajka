@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage
+    x:Class="Przypominajka.Views.PowiadomieniaPage"
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:vm="clr-namespace:Przypominajka.ViewModels"
+    xmlns:m="clr-namespace:Przypominajka.Models"
+    x:DataType="vm:PowiadomieniaViewModel"
+    Title="Powiadomienia">
+
+    <ContentPage.ToolbarItems>
+        <ToolbarItem Text="+ Nowe" Command="{Binding DodajPowiadomienieDlaZadaniaCommand}" />
+    </ContentPage.ToolbarItems>
+
+    <Grid RowDefinitions="Auto,Auto,*">
+
+        <!-- Filtry -->
+        <HorizontalStackLayout Grid.Row="0" Padding="12,8" Spacing="8" BackgroundColor="#F5F5F5">
+            <Label Text="Status:" VerticalOptions="Center" />
+            <Picker ItemsSource="{Binding StatusyFiltra}"
+                    SelectedItem="{Binding FiltrStatusu}" WidthRequest="160" />
+            <Button Text="Szukaj" Command="{Binding ZastosujFiltryCommand}"
+                    BackgroundColor="#3498DB" TextColor="White" CornerRadius="6" />
+        </HorizontalStackLayout>
+
+        <ActivityIndicator Grid.Row="1" IsRunning="{Binding IsLoading}" IsVisible="{Binding IsLoading}"
+                           HorizontalOptions="Center" Margin="4" />
+
+        <!-- Lista powiadomień -->
+        <CollectionView Grid.Row="2" ItemsSource="{Binding Powiadomienia}"
+                        EmptyView="Brak powiadomień dla wybranych filtrów.">
+            <CollectionView.ItemTemplate>
+                <DataTemplate x:DataType="m:Powiadomienie">
+                    <Border Margin="8,4" Padding="12" StrokeShape="RoundRectangle 8"
+                            Stroke="#E0E0E0" BackgroundColor="White">
+                        <Grid ColumnDefinitions="*,Auto" ColumnSpacing="8">
+                            <VerticalStackLayout Grid.Column="0" Spacing="3">
+                                <Label Text="{Binding Zadanie.NazwaZadania}"
+                                       FontAttributes="Bold" FontSize="14" />
+                                <Label Text="{Binding TrescPowiadomienia}" FontSize="12" TextColor="#444"
+                                       MaxLines="2" LineBreakMode="TailTruncation" />
+                                <HorizontalStackLayout Spacing="16">
+                                    <Label Text="{Binding DataZaplanowania, StringFormat='📅 {0:dd.MM.yyyy HH:mm}'}"
+                                           FontSize="11" TextColor="#666" />
+                                    <Label FontSize="11">
+                                        <Label.Text>
+                                            <Binding Path="StatusWyslania"
+                                                     Converter="{StaticResource BoolToStringConverter}"
+                                                     ConverterParameter="✅ Wysłane|⏳ Oczekuje" />
+                                        </Label.Text>
+                                        <Label.TextColor>
+                                            <Binding Path="StatusWyslania"
+                                                     Converter="{StaticResource BoolToColorConverter}" />
+                                        </Label.TextColor>
+                                    </Label>
+                                </HorizontalStackLayout>
+                                <Label Text="{Binding DataWyslania, StringFormat='Wysłane: {0:dd.MM.yyyy HH:mm}'}"
+                                       FontSize="11" TextColor="#27AE60"
+                                       IsVisible="{Binding StatusWyslania}" />
+                            </VerticalStackLayout>
+
+                            <!-- Akcje -->
+                            <VerticalStackLayout Grid.Column="1" Spacing="4">
+                                <Button Text="✓ Wysłane"
+                                        BackgroundColor="#27AE60" TextColor="White"
+                                        CornerRadius="6" FontSize="11"
+                                        IsVisible="{Binding StatusWyslania, Converter={StaticResource InvertBoolConverter}}"
+                                        CommandParameter="{Binding .}"
+                                        Command="{Binding Source={RelativeSource AncestorType={x:Type vm:PowiadomieniaViewModel}}, Path=OznaczJakoWyslaneCommand}" />
+                                <Button Text="🗑"
+                                        BackgroundColor="#E74C3C" TextColor="White"
+                                        WidthRequest="36" HeightRequest="36" CornerRadius="18" Padding="0"
+                                        CommandParameter="{Binding .}"
+                                        Command="{Binding Source={RelativeSource AncestorType={x:Type vm:PowiadomieniaViewModel}}, Path=UsunCommand}" />
+                            </VerticalStackLayout>
+                        </Grid>
+                    </Border>
+                </DataTemplate>
+            </CollectionView.ItemTemplate>
+        </CollectionView>
+    </Grid>
+</ContentPage>

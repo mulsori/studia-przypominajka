@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<Shell
+    x:Class="Przypominajka.AppShell"
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:views="clr-namespace:Przypominajka.Views"
+    FlyoutBehavior="Flyout"
+    Title="Przypominajka">
+
+    <Shell.FlyoutHeader>
+        <Grid BackgroundColor="#3498DB" Padding="16,40,16,20">
+            <Label Text="📋 Przypominajka"
+                   TextColor="White"
+                   FontSize="22"
+                   FontAttributes="Bold" />
+        </Grid>
+    </Shell.FlyoutHeader>
+
+    <FlyoutItem Title="Zadania" Icon="task.png" Route="zadania">
+        <ShellContent ContentTemplate="{DataTemplate views:ZadaniaPage}" />
+    </FlyoutItem>
+
+    <FlyoutItem Title="Kategorie" Icon="category.png" Route="kategorie">
+        <ShellContent ContentTemplate="{DataTemplate views:KategoriePage}" />
+    </FlyoutItem>
+
+    <FlyoutItem Title="Serie" Icon="series.png" Route="serie">
+        <ShellContent ContentTemplate="{DataTemplate views:SeriePage}" />
+    </FlyoutItem>
+
+    <FlyoutItem Title="Powiadomienia" Icon="notification.png" Route="powiadomienia">
+        <ShellContent ContentTemplate="{DataTemplate views:PowiadomieniaPage}" />
+    </FlyoutItem>
+
+</Shell>
